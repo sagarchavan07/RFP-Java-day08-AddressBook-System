@@ -1,19 +1,25 @@
 package com.bridgelabz;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class AddressBookMain {
-    static ArrayList <Contact> AddressBook=new ArrayList();
+    static HashMap<String,ArrayList> AddressBookList=new HashMap<String, ArrayList>();
+    static ArrayList <Contact> currentAddressBook;
+    static String currentAddressBookName;
     static Scanner scanner=new Scanner(System.in);
     public static void main(String[] args) {
         System.out.println("Welcome to Address Book");
 
         AddressBookMain addressBook=new AddressBookMain();
 
-        boolean flag=true;
-        while (flag){
-            System.out.println("**************\nSelect option: \n1.Add Contact \n2.Edit Contact \n3.Delete Contact \n4.Exit");
+        addressBook.addNewAddressBook();
+
+        boolean flag1=true;
+        while (flag1){
+            System.out.println("*************\ncurrent AddressBook Name: "+currentAddressBookName);
+            System.out.println("Select option: \n1.Add Contact \n2.Edit Contact \n3.Delete Contact \n4.Add New AddressBook\n5.Select AddressBook \n6.Exit");
             int option=scanner.nextInt();
             switch (option){
                 case 1:
@@ -27,7 +33,13 @@ public class AddressBookMain {
                     addressBook.deleteContact();
                     break;
                 case 4:
-                    flag=false;
+                    addressBook.addNewAddressBook();
+                    break;
+                case 5:
+                    addressBook.selectAddressBook();
+                    break;
+                case 6:
+                    flag1=false;
                     break;
                 default:
                     System.out.println(option+" is not valid option");
@@ -60,13 +72,14 @@ public class AddressBookMain {
     }
 
     void addContact(Contact contact){
-        AddressBook.add(contact);
+        currentAddressBook.add(contact);
         System.out.println("contact added to AddressBook");
+        System.out.println(contact);
     }
     void editContact(){
         System.out.println("enter name to edit contact");
         String name=scanner.next();
-        for (Contact contact : AddressBook){
+        for (Contact contact : currentAddressBook){
             if (contact.firstName.equalsIgnoreCase(name)) {
                 System.out.println("Enter first name");
                 contact.firstName=scanner.next();
@@ -92,19 +105,49 @@ public class AddressBookMain {
     }
 
     void deleteContact(){
+        boolean isContactFound=false;
         System.out.println("enter name to delete contact");
         String name=scanner.next();
-        for (Contact contact : AddressBook){
+        for (Contact contact : currentAddressBook){
             if (contact.firstName.equalsIgnoreCase(name)) {
                 System.out.println("contact found:");
+                isContactFound=true;
                 System.out.println(contact);
                 System.out.println("confirm to delete (y/n)");
                 if (scanner.next().equalsIgnoreCase("y")) {
-                    AddressBook.remove(contact);
+                    currentAddressBook.remove(contact);
                     System.out.println("contact deleted");
                 }
                 break;
             }
         }
+        if (isContactFound == false) {
+            System.out.println("Opps... contact not found");
+        }
+    }
+    void addNewAddressBook(){
+        System.out.println("Enter name for AddressBook");
+        String AddressBookName=scanner.next();
+        ArrayList <Contact> AddressBook=new ArrayList();
+        AddressBookList.put(AddressBookName,AddressBook);
+        System.out.println("new AddressBook created");
+        currentAddressBook=AddressBookList.get(AddressBookName);
+        currentAddressBookName=AddressBookName;
+    }
+    void selectAddressBook(){
+        System.out.println(AddressBookList.keySet());
+        System.out.println("enter name of address book");
+        String addressBookName=scanner.next();
+
+        for (String key :AddressBookList.keySet()) {
+            if (key.equalsIgnoreCase(addressBookName)){
+                currentAddressBook=AddressBookList.get(key);
+                currentAddressBookName=key;
+                System.out.println("current AddressBook is "+currentAddressBookName);
+            }else {
+                System.out.println("AddressBook not found");
+            }
+        }
+
     }
 }
