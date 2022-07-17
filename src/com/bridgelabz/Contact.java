@@ -6,20 +6,20 @@ public class Contact {
     String address;
     String city;
     String state;
-    int zip;
+    int zipCode;
     long phoneNumber;
     String email;
 
     public Contact() {
     }
 
-    public Contact(String firstName, String lastName, String address, String city, String state, int zip, long phoneNumber, String email) {
+    public Contact(String firstName, String lastName, String address, String city, String state, int zipCode, long phoneNumber, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.city = city;
         this.state = state;
-        this.zip = zip;
+        this.zipCode = zipCode;
         this.phoneNumber = phoneNumber;
         this.email = email;
     }
@@ -64,12 +64,12 @@ public class Contact {
         this.state = state;
     }
 
-    public int getZip() {
-        return zip;
+    public int getZipCode() {
+        return zipCode;
     }
 
-    public void setZip(int zip) {
-        this.zip = zip;
+    public void setZipCode(int zipCode) {
+        this.zipCode = zipCode;
     }
 
     public long getPhoneNumber() {
@@ -96,7 +96,7 @@ public class Contact {
                 ", address='" + address + '\'' +
                 ", city='" + city + '\'' +
                 ", state='" + state + '\'' +
-                ", zip=" + zip +
+                ", zip=" + zipCode +
                 ", phoneNumber=" + phoneNumber +
                 ", email='" + email + '\'' +
                 '}';
