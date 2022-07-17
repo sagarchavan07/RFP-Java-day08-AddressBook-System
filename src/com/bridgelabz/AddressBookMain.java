@@ -10,10 +10,30 @@ public class AddressBookMain {
         System.out.println("Welcome to Address Book");
 
         AddressBookMain addressBook=new AddressBookMain();
-        Contact contact=addressBook.createContact();
-        addressBook.addContact(contact);
-        addressBook.editContact();
-        addressBook.deleteContact();
+
+        boolean flag=true;
+        while (flag){
+            System.out.println("**************\nSelect option: \n1.Add Contact \n2.Edit Contact \n3.Delete Contact \n4.Exit");
+            int option=scanner.nextInt();
+            switch (option){
+                case 1:
+                    Contact contact=addressBook.createContact();
+                    addressBook.addContact(contact);
+                    break;
+                case 2:
+                    addressBook.editContact();
+                    break;
+                case 3:
+                    addressBook.deleteContact();
+                    break;
+                case 4:
+                    flag=false;
+                    break;
+                default:
+                    System.out.println(option+" is not valid option");
+                    break;
+            }
+        }
     }
 
     Contact createContact(){
@@ -76,8 +96,13 @@ public class AddressBookMain {
         String name=scanner.next();
         for (Contact contact : AddressBook){
             if (contact.firstName.equalsIgnoreCase(name)) {
-                AddressBook.remove(contact);
-                System.out.println("contact deleted");
+                System.out.println("contact found:");
+                System.out.println(contact);
+                System.out.println("confirm to delete (y/n)");
+                if (scanner.next().equalsIgnoreCase("y")) {
+                    AddressBook.remove(contact);
+                    System.out.println("contact deleted");
+                }
                 break;
             }
         }
