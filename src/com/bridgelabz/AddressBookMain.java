@@ -23,7 +23,8 @@ public class AddressBookMain {
                     "5.Add New AddressBook \n" +
                     "6.Select AddressBook \n" +
                     "7.Search Contact \n" +
-                    "8.Exit");
+                    "8.Show number of Contact \n" +
+                    "9.Exit");
             int option=scanner.nextInt();
             switch (option){
                 case 1:
@@ -49,6 +50,9 @@ public class AddressBookMain {
                     addressBook.searchContact();
                     break;
                 case 8:
+                    addressBook.showContactCount();
+                    break;
+                case 9:
                     flag1=false;
                     break;
                 default:
