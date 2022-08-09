@@ -8,6 +8,9 @@ public class AddressBook {
     static HashMap<String, ArrayList> addressBookList = new HashMap<String, ArrayList>();
     static ArrayList<ContactPerson> currentAddressBook;
     static String currentAddressBookName;
+    static HashMap<String, ContactPerson> cityContactList = new HashMap<>();
+    static HashMap<String, ContactPerson> stateContactList = new HashMap<>();
+
     static Scanner scanner = new Scanner(System.in);
 
     ContactPerson createContact() {
@@ -39,6 +42,8 @@ public class AddressBook {
             System.out.println("Contact name already exists");
         } else {
             currentAddressBook.add(person);
+            cityContactList.put(person.getCity(),person);
+            stateContactList.put(person.getState(),person);
             System.out.println("contact added to AddressBook " + currentAddressBookName);
             System.out.println(person);
         }
@@ -119,11 +124,38 @@ public class AddressBook {
 
     }
 
-    void showContacts(ArrayList addressBook) {
-        System.out.println("Contacts: ");
-        for (Object p : addressBook) {
-            ContactPerson person = (ContactPerson) p;
-            System.out.println(person);
+    void viewContacts() {
+        System.out.println("*****************************\n1.View by City \n2.View by State");
+        switch (scanner.nextInt()) {
+            case 1:
+                viewContactByCity();
+                break;
+            case 2:
+                viewContactByState();
+                break;
+            default:
+                viewContacts();
+                break;
+        }
+    }
+
+    void viewContactByCity() {
+        System.out.println("Enter City:");
+        String city = scanner.next();
+        for (String key : cityContactList.keySet()) {
+            if (key.equalsIgnoreCase(city)){
+                System.out.println(cityContactList.get(city));
+            }
+        }
+    }
+
+    void viewContactByState() {
+        System.out.println("Enter State:");
+        String state = scanner.next();
+        for (String key : stateContactList.keySet()) {
+            if (key.equalsIgnoreCase(state)){
+                System.out.println(stateContactList.get(state));
+            }
         }
     }
 
@@ -145,14 +177,15 @@ public class AddressBook {
                 break;
             default:
                 searchContact();
+                break;
         }
     }
 
     void searchByCity(String city) {
         System.out.println("Search Result: ");
         for (String addressBookName : addressBookList.keySet()) {
-            for (Object p :addressBookList.get(addressBookName)){
-                ContactPerson person= (ContactPerson) p;
+            for (Object p : addressBookList.get(addressBookName)) {
+                ContactPerson person = (ContactPerson) p;
                 if (person.getCity().equalsIgnoreCase(city)) {
                     System.out.println(person);
                 }
@@ -163,8 +196,8 @@ public class AddressBook {
     void searchByState(String state) {
         System.out.println("Search Result: ");
         for (String addressBookName : addressBookList.keySet()) {
-            for (Object p :addressBookList.get(addressBookName)){
-                ContactPerson person= (ContactPerson) p;
+            for (Object p : addressBookList.get(addressBookName)) {
+                ContactPerson person = (ContactPerson) p;
                 if (person.getState().equalsIgnoreCase(state)) {
                     System.out.println(person);
                 }

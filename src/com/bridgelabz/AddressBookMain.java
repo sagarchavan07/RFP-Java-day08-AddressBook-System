@@ -18,7 +18,7 @@ public class AddressBookMain {
             System.out.println("Select option: \n" +
                     "1.Add Contact \n" +
                     "2.Edit Contact\n" +
-                    "3.Show Contacts \n" +
+                    "3.view Contact \n" +
                     "4.Delete Contact \n" +
                     "5.Add New AddressBook \n" +
                     "6.Select AddressBook \n" +
@@ -34,7 +34,7 @@ public class AddressBookMain {
                     addressBook.editContact();
                     break;
                 case 3:
-                    addressBook.showContacts(AddressBook.currentAddressBook);
+                    addressBook.viewContacts();
                     break;
                 case 4:
                     addressBook.deleteContact();
