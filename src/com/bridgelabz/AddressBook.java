@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class AddressBook {
-    static HashMap<String, ArrayList> addressBookList = new HashMap<String, ArrayList>();
+    static HashMap<String, ArrayList<ContactPerson>> addressBookList = new HashMap<>();
     static ArrayList<ContactPerson> currentAddressBook;
     static String currentAddressBookName;
     static HashMap<String, ArrayList<ContactPerson>> cityContactList = new HashMap<>();
@@ -43,10 +43,10 @@ public class AddressBook {
         } else {
             currentAddressBook.add(person);
 
+            //add to city contact list
             String city = person.getCity();
             ArrayList<ContactPerson> list;
-            //add to city contact list
-            if (cityContactList.keySet().contains(city)) {
+            if (cityContactList.containsKey(city)) {
                 list = cityContactList.get(city);
                 list.add(person);
 
@@ -57,14 +57,15 @@ public class AddressBook {
             }
 
             //add to State contact list
-            if (stateContactList.keySet().contains(city)) {
-                list = stateContactList.get(city);
+            String state= person.getState();
+            if (stateContactList.containsKey(state)) {
+                list = stateContactList.get(state);
                 list.add(person);
 
             } else {
                 list = new ArrayList<>();
                 list.add(person);
-                stateContactList.put(city, list);
+                stateContactList.put(state, list);
             }
             System.out.println("contact added to AddressBook " + currentAddressBookName);
             System.out.println(person);
@@ -100,25 +101,21 @@ public class AddressBook {
     }
 
     void deleteContact() {
-        boolean isContactFound = false;
         System.out.println("enter name to delete contact");
         String name = scanner.next();
         for (ContactPerson contact : currentAddressBook) {
             if (contact.getFirstName().equalsIgnoreCase(name)) {
                 System.out.println("contact found:");
-                isContactFound = true;
                 System.out.println(contact);
                 System.out.println("confirm to delete (y/n)");
                 if (scanner.next().equalsIgnoreCase("y")) {
                     currentAddressBook.remove(contact);
                     System.out.println("contact deleted");
                 }
-                break;
+                return;
             }
         }
-        if (isContactFound == false) {
-            System.out.println("Opps... contact not found");
-        }
+        System.out.println("Opps... contact not found");
     }
 
     void addNewAddressBook() {
@@ -186,7 +183,7 @@ public class AddressBook {
     }
 
     void searchContact() {
-        System.out.println("1. Search by City \n2.Search by State");
+        System.out.println("1.Search by City \n2.Search by State");
         int option = scanner.nextInt();
         switch (option) {
             case 1:
@@ -206,24 +203,20 @@ public class AddressBook {
     void searchByCity(String city) {
         System.out.println("Search Result: ");
         for (String addressBookName : addressBookList.keySet()) {
-            for (Object p : addressBookList.get(addressBookName)) {
-                ContactPerson person = (ContactPerson) p;
-                if (person.getCity().equalsIgnoreCase(city)) {
+            addressBookList.get(addressBookName).forEach((person) -> {
+                if (person.getCity().equalsIgnoreCase(city))
                     System.out.println(person);
-                }
-            }
+            });
         }
     }
 
     void searchByState(String state) {
         System.out.println("Search Result: ");
         for (String addressBookName : addressBookList.keySet()) {
-            for (Object p : addressBookList.get(addressBookName)) {
-                ContactPerson person = (ContactPerson) p;
-                if (person.getState().equalsIgnoreCase(state)) {
+            addressBookList.get(addressBookName).forEach((person)->{
+                if (person.getState().equalsIgnoreCase(state))
                     System.out.println(person);
-                }
-            }
+            });
         }
     }
 
@@ -234,14 +227,12 @@ public class AddressBook {
             case 1:
                 System.out.println("Enter city :");
                 String city = scanner.next();
-                int cityCount=cityContactList.get(city).size();
-                System.out.println("Count: "+cityCount);
+                System.out.println("Count: " + cityContactList.get(city).size());
                 break;
             case 2:
                 System.out.println("Enter State :");
                 String state = scanner.next();
-                int stateCount=stateContactList.get(state).size();
-                System.out.println("Count: "+stateCount);
+                System.out.println("Count: " + stateContactList.get(state).size());
                 break;
             default:
                 showContactCount();
