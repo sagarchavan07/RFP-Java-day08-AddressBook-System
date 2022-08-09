@@ -8,8 +8,8 @@ public class AddressBook {
     static HashMap<String, ArrayList> addressBookList = new HashMap<String, ArrayList>();
     static ArrayList<ContactPerson> currentAddressBook;
     static String currentAddressBookName;
-    static HashMap<String, ContactPerson> cityContactList = new HashMap<>();
-    static HashMap<String, ContactPerson> stateContactList = new HashMap<>();
+    static HashMap<String, ArrayList<ContactPerson>> cityContactList = new HashMap<>();
+    static HashMap<String, ArrayList<ContactPerson>> stateContactList = new HashMap<>();
 
     static Scanner scanner = new Scanner(System.in);
 
@@ -42,8 +42,30 @@ public class AddressBook {
             System.out.println("Contact name already exists");
         } else {
             currentAddressBook.add(person);
-            cityContactList.put(person.getCity(),person);
-            stateContactList.put(person.getState(),person);
+
+            String city = person.getCity();
+            ArrayList<ContactPerson> list;
+            //add to city contact list
+            if (cityContactList.keySet().contains(city)) {
+                list = cityContactList.get(city);
+                list.add(person);
+
+            } else {
+                list = new ArrayList<>();
+                list.add(person);
+                cityContactList.put(city, list);
+            }
+
+            //add to State contact list
+            if (stateContactList.keySet().contains(city)) {
+                list = stateContactList.get(city);
+                list.add(person);
+
+            } else {
+                list = new ArrayList<>();
+                list.add(person);
+                stateContactList.put(city, list);
+            }
             System.out.println("contact added to AddressBook " + currentAddressBookName);
             System.out.println(person);
         }
@@ -143,7 +165,7 @@ public class AddressBook {
         System.out.println("Enter City:");
         String city = scanner.next();
         for (String key : cityContactList.keySet()) {
-            if (key.equalsIgnoreCase(city)){
+            if (key.equalsIgnoreCase(city)) {
                 System.out.println(cityContactList.get(city));
             }
         }
@@ -153,7 +175,7 @@ public class AddressBook {
         System.out.println("Enter State:");
         String state = scanner.next();
         for (String key : stateContactList.keySet()) {
-            if (key.equalsIgnoreCase(state)){
+            if (key.equalsIgnoreCase(state)) {
                 System.out.println(stateContactList.get(state));
             }
         }
@@ -202,6 +224,28 @@ public class AddressBook {
                     System.out.println(person);
                 }
             }
+        }
+    }
+
+    void showContactCount() {
+        System.out.println("1.Count of City \n2.Count of State");
+        int option = scanner.nextInt();
+        switch (option) {
+            case 1:
+                System.out.println("Enter city :");
+                String city = scanner.next();
+                int cityCount=cityContactList.get(city).size();
+                System.out.println("Count: "+cityCount);
+                break;
+            case 2:
+                System.out.println("Enter State :");
+                String state = scanner.next();
+                int stateCount=stateContactList.get(state).size();
+                System.out.println("Count: "+stateCount);
+                break;
+            default:
+                showContactCount();
+                break;
         }
     }
 }
