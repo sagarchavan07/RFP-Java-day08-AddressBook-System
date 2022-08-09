@@ -1,6 +1,6 @@
 package com.bridgelabz;
 
-public class ContactPerson {
+public class ContactPerson implements Comparable {
     private String firstName;
     private String lastName;
     private String address;
@@ -100,5 +100,11 @@ public class ContactPerson {
                 ", phoneNumber=" + phoneNumber +
                 ", email='" + email + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        ContactPerson person= (ContactPerson) o;
+        return this.getFirstName().compareTo(person.getFirstName());
     }
 }
