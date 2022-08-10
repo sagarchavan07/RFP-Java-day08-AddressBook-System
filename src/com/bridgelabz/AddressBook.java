@@ -1,9 +1,6 @@
 package com.bridgelabz;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AddressBook {
@@ -165,7 +162,7 @@ public class AddressBook {
         String city = scanner.next();
         for (String key : cityContactList.keySet()) {
             if (key.equalsIgnoreCase(city)) {
-                stateContactList.get(city).stream().forEach(person -> System.out.println(person));
+                stateContactList.get(city).forEach(person -> System.out.println(person));
             }
         }
     }
@@ -175,7 +172,7 @@ public class AddressBook {
         String state = scanner.next();
         for (String key : stateContactList.keySet()) {
             if (key.equalsIgnoreCase(state)) {
-                stateContactList.get(state).stream().forEach(person -> System.out.println(person));
+                stateContactList.get(state).forEach(person -> System.out.println(person));
             }
         }
     }
@@ -243,8 +240,40 @@ public class AddressBook {
     }
 
     void sortContact() {
-        List<ContactPerson> list = currentAddressBook.stream().sorted().collect(Collectors.toList());
-        list.stream().forEach(person -> System.out.println(person));
+        List<ContactPerson> allContacts=getAllContacts();
+        List<ContactPerson> sortedContacts;
+
+        System.out.println("1.Sort By Name \n2.Sort By CIty \n3.Sort By State \n4.Sort By Zipcode \n5.back");
+        switch (scanner.nextInt()){
+            case 1:
+                sortedContacts = allContacts.stream().sorted((x,y) -> x.getFirstName().compareTo(y.getFirstName())).collect(Collectors.toList());
+                sortedContacts.forEach(x-> System.out.println(x));
+                break;
+            case 2:
+                sortedContacts = allContacts.stream().sorted((x,y) -> x.getCity().compareTo(y.getCity())).collect(Collectors.toList());
+                sortedContacts.forEach(x-> System.out.println(x));
+                break;
+            case 3:
+                sortedContacts = allContacts.stream().sorted((x,y) -> x.getState().compareTo(y.getState())).collect(Collectors.toList());
+                sortedContacts.forEach(x-> System.out.println(x));
+                break;
+            case 4:
+                sortedContacts = allContacts.stream().sorted((x,y) ->Integer.compare(x.getZipCode(),y.getZipCode())).collect(Collectors.toList());
+                sortedContacts.forEach(x-> System.out.println(x));
+                break;
+            case 5:
+                break;
+            default:
+                sortContact();
+                break;
+        }
     }
 
+    List<ContactPerson> getAllContacts(){
+        List<ContactPerson> allContacts=new ArrayList<>();
+        for (String key: addressBookList.keySet()) {
+            allContacts.addAll(addressBookList.get(key));
+        }
+        return allContacts;
+    }
 }
