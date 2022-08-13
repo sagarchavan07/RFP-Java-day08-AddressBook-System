@@ -1,0 +1,2 @@
+Contact{firstName='sagar', lastName='chavan', address='pune', city='pune', state='MH', zip=415001, phoneNumber=123456789, email='abc@xyz.com'}
+Contact{firstName='vishal', lastName='shinde', address='satara', city='satara', state='MH', zip=415002, phoneNumber=12354689, email='vishal@abc.com'}

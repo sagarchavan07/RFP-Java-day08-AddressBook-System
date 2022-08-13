@@ -1,5 +1,7 @@
 package com.bridgelabz;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -275,5 +277,15 @@ public class AddressBook {
             allContacts.addAll(addressBookList.get(key));
         }
         return allContacts;
+    }
+
+    void readAddressBook() throws FileNotFoundException {
+        FileIO.read();
+    }
+
+    void writeAddressBook() throws IOException {
+        for (String key: addressBookList.keySet()) {
+            FileIO.write(addressBookList.get(key),key);
+        }
     }
 }
