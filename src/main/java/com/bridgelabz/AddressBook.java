@@ -1,5 +1,6 @@
 package com.bridgelabz;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
@@ -242,26 +243,26 @@ public class AddressBook {
     }
 
     void sortContact() {
-        List<ContactPerson> allContacts=getAllContacts();
+        List<ContactPerson> allContacts = getAllContacts();
         List<ContactPerson> sortedContacts;
 
         System.out.println("1.Sort By Name \n2.Sort By CIty \n3.Sort By State \n4.Sort By Zipcode \n5.back");
-        switch (scanner.nextInt()){
+        switch (scanner.nextInt()) {
             case 1:
-                sortedContacts = allContacts.stream().sorted((x,y) -> x.getFirstName().compareTo(y.getFirstName())).collect(Collectors.toList());
-                sortedContacts.forEach(x-> System.out.println(x));
+                sortedContacts = allContacts.stream().sorted((x, y) -> x.getFirstName().compareTo(y.getFirstName())).collect(Collectors.toList());
+                sortedContacts.forEach(x -> System.out.println(x));
                 break;
             case 2:
-                sortedContacts = allContacts.stream().sorted((x,y) -> x.getCity().compareTo(y.getCity())).collect(Collectors.toList());
-                sortedContacts.forEach(x-> System.out.println(x));
+                sortedContacts = allContacts.stream().sorted((x, y) -> x.getCity().compareTo(y.getCity())).collect(Collectors.toList());
+                sortedContacts.forEach(x -> System.out.println(x));
                 break;
             case 3:
-                sortedContacts = allContacts.stream().sorted((x,y) -> x.getState().compareTo(y.getState())).collect(Collectors.toList());
-                sortedContacts.forEach(x-> System.out.println(x));
+                sortedContacts = allContacts.stream().sorted((x, y) -> x.getState().compareTo(y.getState())).collect(Collectors.toList());
+                sortedContacts.forEach(x -> System.out.println(x));
                 break;
             case 4:
-                sortedContacts = allContacts.stream().sorted((x,y) ->Integer.compare(x.getZipCode(),y.getZipCode())).collect(Collectors.toList());
-                sortedContacts.forEach(x-> System.out.println(x));
+                sortedContacts = allContacts.stream().sorted((x, y) -> Integer.compare(x.getZipCode(), y.getZipCode())).collect(Collectors.toList());
+                sortedContacts.forEach(x -> System.out.println(x));
                 break;
             case 5:
                 break;
@@ -271,21 +272,53 @@ public class AddressBook {
         }
     }
 
-    List<ContactPerson> getAllContacts(){
-        List<ContactPerson> allContacts=new ArrayList<>();
-        for (String key: addressBookList.keySet()) {
+    List<ContactPerson> getAllContacts() {
+        List<ContactPerson> allContacts = new ArrayList<>();
+        for (String key : addressBookList.keySet()) {
             allContacts.addAll(addressBookList.get(key));
         }
         return allContacts;
     }
 
     void readAddressBook() throws FileNotFoundException {
-        FileIO.read();
+        System.out.println("Select option \n1.read from txt \n2.read from csv \nback");
+        int option = scanner.nextInt();
+        switch (option) {
+            case 1:
+                FileIO.read(new File(FileIO.FILE_PATH.concat("txt//")));
+                break;
+            case 2:
+                FileIO.read(new File(FileIO.FILE_PATH.concat("csv//")));
+                break;
+            case 3:
+                break;
+            default:
+                readAddressBook();
+        }
+
+
     }
 
     void writeAddressBook() throws IOException {
-        for (String key: addressBookList.keySet()) {
-            FileIO.write(addressBookList.get(key),key);
+        System.out.println("Select option \n1.Write to txt \n2.write to csv \nback");
+        int option = scanner.nextInt();
+        switch (option) {
+            case 1:
+                for (String key : addressBookList.keySet()) {
+                    FileIO.writeTxtFile(addressBookList.get(key), key);
+                }
+                break;
+            case 2:
+                for (String key : addressBookList.keySet()) {
+                    FileIO.writeCsvFile(addressBookList.get(key), key);
+                }
+                break;
+            case 3:
+                break;
+            default:
+                writeAddressBook();
+                break;
+
         }
     }
 }
