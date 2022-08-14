@@ -1,24 +1,18 @@
 package com.bridgelabz;
 
+import com.google.gson.Gson;
 import com.opencsv.CSVWriter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class FileIO {
     static final String FILE_PATH = System.getProperty("user.dir").concat("//AddressBooks//");
-
-    public enum FileType {
-        TXT, CSV
-    }
 
     static boolean read(File filePath) throws FileNotFoundException {
         for (File file : filePath.listFiles()) {
@@ -68,5 +62,22 @@ public class FileIO {
         csvWriter.writeAll(data);
         fileWriter.close();
         return true;
+    }
+
+    public static void writeJsonFile(ArrayList<ContactPerson> addressBook, String addressBookName) throws IOException {
+        File file = new File(FILE_PATH.concat("json//"+addressBookName+".json"));
+        boolean isCreated = file.createNewFile();
+        if (!isCreated) {
+            file.delete();
+            file.createNewFile();
+        }
+        FileWriter writer =new FileWriter(file);
+        Gson gson=new Gson();
+        String data="";
+        for (ContactPerson person : addressBook) {
+            data=data.concat(gson.toJson(person)+"\n");
+        }
+        writer.write(data);
+        writer.close();
     }
 }
