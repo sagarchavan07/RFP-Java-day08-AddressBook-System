@@ -1,16 +1,18 @@
 package com.bridgelabz;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class AddressBookMain {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, SQLException {
         System.out.println("Welcome to Address Book");
 
         AddressBook addressBook = new AddressBook();
         Scanner scanner = new Scanner(System.in);
 
-        addressBook.addNewAddressBook();
+//        addressBook.addNewAddressBook();
+        JDBCService.readAddressBooks();
 
         boolean flag1 = true;
         while (flag1) {

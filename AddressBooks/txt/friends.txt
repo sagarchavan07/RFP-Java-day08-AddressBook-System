@@ -1,2 +1,4 @@
-Contact{firstName='sagar', lastName='chavan', address='pune', city='pune', state='MH', zip=415001, phoneNumber=123456789, email='abc@xyz.com'}
-Contact{firstName='vishal', lastName='shinde', address='satara', city='satara', state='MH', zip=415002, phoneNumber=12354689, email='vishal@abc.com'}
+Contact{firstName='sagar', lastName='chavan', address='pune', city='pune', state='mh', zip=415002, phoneNumber=1864382465, email='sagar@abc.com'}
+Contact{firstName='rohit', lastName='kadam', address='satara', city='satara', state='mh', zip=415001, phoneNumber=125364785, email='rohit@xyz.com'}
+Contact{firstName='akshay', lastName='gurav', address='satara', city='satara', state='mh', zip=415002, phoneNumber=99897865, email='akshay@xyz.com'}
+Contact{firstName='ranjit', lastName='kurade', address='pune', city='pune', state='mh', zip=415000, phoneNumber=68548965, email='rjt@xyz.com'}
