@@ -3,12 +3,14 @@ package com.bridgelabz;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class AddressBook {
     static HashMap<String, ArrayList<ContactPerson>> addressBookList = new HashMap<>();
     static ArrayList<ContactPerson> currentAddressBook;
+
     static String currentAddressBookName;
     static HashMap<String, ArrayList<ContactPerson>> cityContactList = new HashMap<>();
     static HashMap<String, ArrayList<ContactPerson>> stateContactList = new HashMap<>();
@@ -38,68 +40,21 @@ public class AddressBook {
         return person;
     }
 
-    void addContact(ContactPerson person) {
+    void addContact(ContactPerson person) throws SQLException {
         boolean isDuplicate = checkDuplicateContact(person);
         if (isDuplicate) {
             System.out.println("Contact name already exists");
         } else {
+            JDBCService.addContact(person,currentAddressBookName);
             currentAddressBook.add(person);
-
-            //add to city contact list
-            String city = person.getCity();
-            ArrayList<ContactPerson> list;
-            if (cityContactList.containsKey(city)) {
-                list = cityContactList.get(city);
-                list.add(person);
-
-            } else {
-                list = new ArrayList<>();
-                list.add(person);
-                cityContactList.put(city, list);
-            }
-
-            //add to State contact list
-            String state = person.getState();
-            if (stateContactList.containsKey(state)) {
-                list = stateContactList.get(state);
-                list.add(person);
-
-            } else {
-                list = new ArrayList<>();
-                list.add(person);
-                stateContactList.put(state, list);
-            }
             System.out.println("contact added to AddressBook " + currentAddressBookName);
             System.out.println(person);
         }
     }
 
-    void editContact() {
+    void editContact() throws SQLException {
         System.out.println("enter name to edit contact");
-        String name = scanner.next();
-        for (ContactPerson person : currentAddressBook) {
-            if (person.getFirstName().equalsIgnoreCase(name)) {
-                System.out.println("Enter first name");
-                person.setFirstName(scanner.next());
-                System.out.println("Enter last name");
-                person.setLastName(scanner.next());
-                System.out.println("Enter address");
-                person.setAddress(scanner.next());
-                System.out.println("Enter city");
-                person.setCity(scanner.next());
-                System.out.println("Enter state");
-                person.setState(scanner.next());
-                System.out.println("Enter ZipCode");
-                person.setZipCode(scanner.nextInt());
-                System.out.println("Enter phoneNumber");
-                person.setPhoneNumber(scanner.nextLong());
-                System.out.println("Enter Email");
-                person.setEmail(scanner.next());
-                System.out.println("contact updated successfully.");
-                System.out.println(person);
-                break;
-            }
-        }
+        JDBCService.updateContact(scanner.next());
     }
 
     void deleteContact() {
@@ -145,7 +100,32 @@ public class AddressBook {
 
     }
 
+    public void initializeCityAndStateContactList() {
+        for (String key : addressBookList.keySet()) {
+            for (ContactPerson person : addressBookList.get(key)) {
+                String city = person.getCity();
+                if (cityContactList.containsKey(city)) {
+                    cityContactList.get(city).add(person);
+                } else {
+                    ArrayList<ContactPerson> list = new ArrayList<>();
+                    list.add(person);
+                    cityContactList.put(city, list);
+                }
+
+                String state = person.getState();
+                if (stateContactList.containsKey(state)) {
+                    stateContactList.get(state).add(person);
+                } else {
+                    ArrayList<ContactPerson> list = new ArrayList<>();
+                    list.add(person);
+                    stateContactList.put(state, list);
+                }
+            }
+        }
+    }
+
     void viewContacts() {
+        initializeCityAndStateContactList();
         System.out.println("*****************************\n1.View by City \n2.View by State");
         switch (scanner.nextInt()) {
             case 1:
@@ -165,7 +145,7 @@ public class AddressBook {
         String city = scanner.next();
         for (String key : cityContactList.keySet()) {
             if (key.equalsIgnoreCase(city)) {
-                stateContactList.get(city).forEach(person -> System.out.println(person));
+                cityContactList.get(key).forEach(person -> System.out.println(person));
             }
         }
     }
@@ -222,19 +202,19 @@ public class AddressBook {
         }
     }
 
-    void showContactCount() {
+    void showContactCount() throws SQLException {
         System.out.println("1.Count of City \n2.Count of State");
         int option = scanner.nextInt();
         switch (option) {
             case 1:
                 System.out.println("Enter city :");
                 String city = scanner.next();
-                System.out.println("Count: " + cityContactList.get(city).size());
+                System.out.println("Count: " + JDBCService.getContactCountByCity(city));
                 break;
             case 2:
                 System.out.println("Enter State :");
                 String state = scanner.next();
-                System.out.println("Count: " + stateContactList.get(state).size());
+                System.out.println("Count: " + JDBCService.getContactCountByState(state));
                 break;
             default:
                 showContactCount();
@@ -280,8 +260,8 @@ public class AddressBook {
         return allContacts;
     }
 
-    void readAddressBook() throws FileNotFoundException {
-        System.out.println("Select option \n1.read from txt file \n2.read from csv file\n3.read from json file\n4.back");
+    void readAddressBook() throws FileNotFoundException, SQLException {
+        System.out.println("Select option \n1.read from txt file \n2.read from csv file\n3.read from json file\n4.Read from Database\n5.back");
         int option = scanner.nextInt();
         switch (option) {
             case 1:
@@ -294,6 +274,8 @@ public class AddressBook {
                 FileIO.read(new File(FileIO.FILE_PATH.concat("json//")));
                 break;
             case 4:
+                JDBCService.readAddressBooks();
+            case 5:
                 break;
             default:
                 readAddressBook();
